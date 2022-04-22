@@ -22,13 +22,13 @@ connection.once("open", async () => {
     const thoughts = getRandomThought(20);
 
     const userName = getRandomName();
-    const github = `${first}${Math.floor(Math.random() * (99 - 18 + 1) + 18)}`;
+    const email = `${userName}${Math.floor(
+      Math.random() * (99 - 18 + 1) + 18
+    )}@gmail.com`;
 
     users.push({
       userName,
-      last,
-      github,
-      reactions,
+      email,
     });
   }
 
@@ -38,7 +38,6 @@ connection.once("open", async () => {
   // Add thoughts to the collection and await the results
   await Thought.collection.insertOne({
     thoughtName: "UCLA",
-    inPerson: false,
     users: [...users],
   });
 
