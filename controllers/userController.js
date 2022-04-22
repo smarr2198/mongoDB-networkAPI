@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongoose").Types;
-const { User, Course } = require("../models");
+const { User, Reaction } = require("../models");
 
 // Aggregate function to get the number of users overall
 const headCount = async () =>
@@ -67,31 +67,37 @@ module.exports = {
     User.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
         !user
-          ? res.status(404).json({ message: "No such user exists" })
-          : Course.findOneAndUpdate(
-              { users: req.params.userId },
-              { $pull: { users: req.params.userId } },
-              { new: true }
-            )
+          ? res.status(404).json({ message: "No user found with that ID :(" })
+          : res.json(user)
       )
-      .then((course) =>
-        !course
-          ? res.status(404).json({
-              message: "User deleted, but no courses found",
-            })
-          : res.json({ message: "User successfully deleted" })
-      )
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
-      });
+      .catch((err) => res.status(500).json(err));
+    // .then((user) =>
+    //   !user
+    //     ? res.status(404).json({ message: "No such user exists" })
+    // : Course.findOneAndUpdate(
+    //     { users: req.params.userId },
+    //     { $pull: { users: req.params.userId } },
+    //     { new: true }
+    //   )
+    // )
+    // .then((course) =>
+    //   !course
+    //     ? res.status(404).json({
+    //         message: "User deleted, but no courses found",
+    //       })
+    //     : res.json({ message: "User successfully deleted" })
+    // )
+    // .catch((err) => {
+    //   console.log(err);
+    //   res.status(500).json(err);
+    // });
   },
 
-  // Add an reaction to a user
+  // Add a reaction to a user
   addReaction(req, res) {
     console.log("You are adding an reaction");
     console.log(req.body);
-    User.findOneAndUpdate(
+    Reaction.findOneAndUpdate(
       { _id: req.params.userId },
       { $addToSet: { reactions: req.body } },
       { runValidators: true, new: true }
@@ -105,9 +111,54 @@ module.exports = {
   },
   // Remove reaction from a user
   removeReaction(req, res) {
-    User.findOneAndUpdate(
+    Reaction.findOneAndUpdate(
       { _id: req.params.userId },
       { $pull: { reaction: { reactionId: req.params.reactionId } } },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: "No user found with that ID :(" })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
+  // Update a User
+  updateUser(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: "No thought with this id!" })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
+  // Add an Friend to a User
+  addFriend(req, res) {
+    console.log("You are adding an assignment");
+    console.log(req.body);
+    User.findOneAndUpdate(
+      { _id: req.params.friends },
+      { $addToSet: { friends: req.body } },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: "No user found with that ID :(" })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
+  removeFriend(req, res) {
+    console.log("You are adding an assignment");
+    console.log(req.body);
+    User.findOneAndRemove(
+      { _id: req.params.friends },
+      { $addToSet: { friends: req.body } },
       { runValidators: true, new: true }
     )
       .then((user) =>
