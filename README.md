@@ -10,7 +10,7 @@
 
 ## Description
 
-This is a MongoDB social network API. This allows the user, through the thunder client, to create users, create thoughts, and add other users as friends. You can also add reactions to users thoughts.
+This is a MongoDB social network API. This allows the user, through the thunder client, to create, edit, and delete users. create, edit, and delete thoughts. Also add or delete other users as friends. You can also add and delete reactions to users thoughts.
 
 ## License
 
