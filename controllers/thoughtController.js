@@ -26,7 +26,7 @@ module.exports = {
       { $addToSet: { thoughts: req.params.thoughtId } },
       { new: true }
     )
-      .then((user) => res.json(user))
+      .then((thought) => res.json(thought))
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
